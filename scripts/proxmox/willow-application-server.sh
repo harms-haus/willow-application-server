@@ -10,9 +10,18 @@ var_unprivileged="${var_unprivileged:-1}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-DEFAULT_INSTALL_BASE="file://${REPO_ROOT}/scripts/proxmox/install"
+LOCAL_INSTALL_DIR="${REPO_ROOT}/scripts/proxmox/install"
 WAS_INSTALL_BRANCH="${WAS_INSTALL_BRANCH:-main}"
-WAS_INSTALL_BASE="${WAS_INSTALL_BASE:-${DEFAULT_INSTALL_BASE}}"
+REMOTE_INSTALL_BASE="https://raw.githubusercontent.com/harms-haus/willow-application-server/${WAS_INSTALL_BRANCH}/scripts/proxmox/install"
+
+# Prefer user override; else if local installer exists use file://; otherwise use remote
+if [[ -z "${WAS_INSTALL_BASE:-}" ]]; then
+  if [[ -f "${LOCAL_INSTALL_DIR}/willowapplicationserver-install.sh" ]]; then
+    WAS_INSTALL_BASE="file://${LOCAL_INSTALL_DIR}"
+  else
+    WAS_INSTALL_BASE="${REMOTE_INSTALL_BASE}"
+  fi
+fi
 
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 
