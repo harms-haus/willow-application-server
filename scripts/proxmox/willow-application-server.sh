@@ -8,8 +8,11 @@ var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+DEFAULT_INSTALL_BASE="file://${REPO_ROOT}/scripts/proxmox/install"
 WAS_INSTALL_BRANCH="${WAS_INSTALL_BRANCH:-main}"
-WAS_INSTALL_BASE="${WAS_INSTALL_BASE:-https://raw.githubusercontent.com/HeyWillow/willow-application-server/${WAS_INSTALL_BRANCH}/scripts/proxmox/install}"
+WAS_INSTALL_BASE="${WAS_INSTALL_BASE:-${DEFAULT_INSTALL_BASE}}"
 
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 
